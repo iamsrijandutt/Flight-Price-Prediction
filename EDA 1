@@ -1,0 +1,663 @@
+
+
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings('ignore')
+     
+
+from google.colab import files
+uploaded=files.upload()
+     
+Upload widget is only available when the cell has been executed in the current browser session. Please rerun this cell to enable.
+Saving 5 th year project airlines_flights_data.csv to 5 th year project airlines_flights_data.csv
+
+df=pd.read_csv('5 th year project airlines_flights_data.csv')
+     
+
+df.head(16)
+     
+index	airline	flight	source_city	departure_time	stops	arrival_time	destination_city	class	duration	days_left	price
+0	0	SpiceJet	SG-8709	Delhi	Evening	zero	Night	Mumbai	Economy	2.17	1	5953
+1	1	SpiceJet	SG-8157	Delhi	Early_Morning	zero	Morning	Mumbai	Economy	2.33	1	5953
+2	2	AirAsia	I5-764	Delhi	Early_Morning	zero	Early_Morning	Mumbai	Economy	2.17	1	5956
+3	3	Vistara	UK-995	Delhi	Morning	zero	Afternoon	Mumbai	Economy	2.25	1	5955
+4	4	Vistara	UK-963	Delhi	Morning	zero	Morning	Mumbai	Economy	2.33	1	5955
+5	5	Vistara	UK-945	Delhi	Morning	zero	Afternoon	Mumbai	Economy	2.33	1	5955
+6	6	Vistara	UK-927	Delhi	Morning	zero	Morning	Mumbai	Economy	2.08	1	6060
+7	7	Vistara	UK-951	Delhi	Afternoon	zero	Evening	Mumbai	Economy	2.17	1	6060
+8	8	GO_FIRST	G8-334	Delhi	Early_Morning	zero	Morning	Mumbai	Economy	2.17	1	5954
+9	9	GO_FIRST	G8-336	Delhi	Afternoon	zero	Evening	Mumbai	Economy	2.25	1	5954
+10	10	GO_FIRST	G8-392	Delhi	Afternoon	zero	Evening	Mumbai	Economy	2.25	1	5954
+11	11	GO_FIRST	G8-338	Delhi	Morning	zero	Afternoon	Mumbai	Economy	2.33	1	5954
+12	12	Indigo	6E-5001	Delhi	Early_Morning	zero	Morning	Mumbai	Economy	2.17	1	5955
+13	13	Indigo	6E-6202	Delhi	Morning	zero	Afternoon	Mumbai	Economy	2.17	1	5955
+14	14	Indigo	6E-549	Delhi	Afternoon	zero	Evening	Mumbai	Economy	2.25	1	5955
+15	15	Indigo	6E-6278	Delhi	Morning	zero	Morning	Mumbai	Economy	2.33	1	5955
+
+df.columns
+     
+Index(['index', 'airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price'],
+      dtype='object')
+
+unique_source_cities = df['source_city'].unique()
+print("Unique values in 'source_city' column:")
+for city in unique_source_cities:
+    print(city)
+     
+Unique values in 'source_city' column:
+Delhi
+Mumbai
+Bangalore
+Kolkata
+Hyderabad
+Chennai
+
+df.shape
+     
+(300153, 12)
+
+unique_source_cities = df['destination_city'].unique()
+print("Unique values in 'destination_city' column:")
+for city in unique_source_cities:
+    print(city)
+     
+Unique values in 'destination_city' column:
+Mumbai
+Bangalore
+Kolkata
+Hyderabad
+Chennai
+Delhi
+
+
+     
+
+source_city_counts = df['source_city'].value_counts()
+print("Count of each unique value in 'source_city' column:")
+print(source_city_counts)
+     
+Count of each unique value in 'source_city' column:
+source_city
+Delhi        61343
+Mumbai       60896
+Bangalore    52061
+Kolkata      46347
+Hyderabad    40806
+Chennai      38700
+Name: count, dtype: int64
+
+
+     
+
+destination_city_counts = df['destination_city'].value_counts()
+print("Count of each unique value in 'destination_city' column:")
+print(destination_city_counts)
+     
+Count of each unique value in 'destination_city' column:
+destination_city
+Mumbai       59097
+Delhi        57360
+Bangalore    51068
+Kolkata      49534
+Hyderabad    42726
+Chennai      40368
+Name: count, dtype: int64
+
+df.drop(columns='index',inplace=True)
+     
+
+df.shape
+     
+(300153, 11)
+
+df.info()
+     
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 300153 entries, 0 to 300152
+Data columns (total 11 columns):
+ #   Column            Non-Null Count   Dtype  
+---  ------            --------------   -----  
+ 0   airline           300153 non-null  object 
+ 1   flight            300153 non-null  object 
+ 2   source_city       300153 non-null  object 
+ 3   departure_time    300153 non-null  object 
+ 4   stops             300153 non-null  object 
+ 5   arrival_time      300153 non-null  object 
+ 6   destination_city  300153 non-null  object 
+ 7   class             300153 non-null  object 
+ 8   duration          300153 non-null  float64
+ 9   days_left         300153 non-null  int64  
+ 10  price             300153 non-null  int64  
+dtypes: float64(1), int64(2), object(8)
+memory usage: 25.2+ MB
+
+df.isnull().sum()
+     
+0
+airline	0
+flight	0
+source_city	0
+departure_time	0
+stops	0
+arrival_time	0
+destination_city	0
+class	0
+duration	0
+days_left	0
+price	0
+
+dtype: int64
+
+plt.figure(figsize=(10,5))
+ax =sns.barplot(x=df['airline'].value_counts().index, y=df['airline'].value_counts().values, palette='Greens' )
+for container in ax.containers:
+    ax.bar_label(container)
+plt.xlabel("Airlines")
+plt.ylabel("No of Flights")
+plt.title("Flight per Airlines")
+     
+Text(0.5, 1.0, 'Flight per Airlines')
+
+
+plt.figure(figsize=(10,5))
+sns.histplot(df['price'],kde=True,color='y')
+plt.title("Distribution of Flight Prices")
+plt.show()
+     
+
+
+df.columns
+     
+Index(['index', 'airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price'],
+      dtype='object')
+
+plt.figure(figsize=(10,5))
+ax =sns.barplot(x=df['source_city'].value_counts().index, y=df['source_city'].value_counts().values, palette='coolwarm' )
+for container in ax.containers:
+    ax.bar_label(container)
+plt.xlabel("Cities")
+plt.ylabel("No of Flights")
+plt.title("Flight Departing from each cities")
+     
+Text(0.5, 1.0, 'Flight Departing from each cities')
+
+
+
+     
+
+plt.figure(figsize=(10,5))
+ax =sns.barplot(x=df['destination_city'].value_counts().index, y=df['destination_city'].value_counts().values, palette='Spectral' )
+for container in ax.containers:
+    ax.bar_label(container)
+plt.xlabel("Cities")
+plt.ylabel("No of Flights")
+plt.title("Flight Arriving in each cities")
+     
+Text(0.5, 1.0, 'Flight Arriving in each cities')
+
+
+plt.figure(figsize=(15,10))
+plt.subplot(2,2,1)
+ax=sns.countplot(x=df['stops'])
+for i in ax.containers:
+    ax.bar_label(i)
+plt.title('Distribution Of No. Of Stops Of The Flight In The Dataset')
+     
+Text(0.5, 1.0, 'Distribution Of No. Of Stops Of The Flight In The Dataset')
+
+
+plt.figure(figsize=(15,10))
+plt.subplot(2,2,2)
+ax=sns.countplot(x=df['departure_time'])
+for i in ax.containers:
+    ax.bar_label(i)
+plt.title('Distribution Of The Departure Times Of The Flight In The Dataset')
+
+     
+Text(0.5, 1.0, 'Distribution Of The Departure Times Of The Flight In The Dataset')
+
+
+plt.figure(figsize=(5,10))
+plt.subplot(2,2,3)
+ax=sns.countplot(x=df['class'])
+for i in ax.containers:
+    ax.bar_label(i)
+plt.title('Distribution Of The Classes Of The Flight In The Dataset')
+
+
+     
+Text(0.5, 1.0, 'Distribution Of The Classes Of The Flight In The Dataset')
+
+
+plt.figure(figsize=(15,8))
+plt.subplot(2,2,4)
+ax=sns.countplot(x=df['arrival_time'])
+for i in ax.containers:
+    ax.bar_label(i)
+plt.title('Distribution Of The Arrival Time Of The Flight In The Dataset')
+     
+Text(0.5, 1.0, 'Distribution Of The Arrival Time Of The Flight In The Dataset')
+
+
+df['route']=df['source_city']+"-"+df['destination_city']
+plt.figure(figsize=(20,10))
+ax =sns.barplot(x=df['route'].value_counts().sort_values(ascending=False)[:10].index, y=df['route'].value_counts().sort_values(ascending=False)[:10].values )
+for container in ax.containers:
+    ax.bar_label(container)
+plt.xlabel("Routes")
+plt.ylabel("No of Flights")
+plt.title("Top-10 most Popular Routes")
+     
+Text(0.5, 1.0, 'Top-10 most Popular Routes')
+
+
+df.shape
+     
+(300153, 12)
+
+df.columns
+     
+Index(['airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price', 'route'],
+      dtype='object')
+
+price_by_daysleft=df.groupby('days_left')['price'].mean().reset_index()
+
+plt.figure(figsize=(15,6))
+plt.title('No. Of Days Left To Departure vs Price')
+plt.scatter(x=price_by_daysleft['days_left'],y=price_by_daysleft['price'],c='red',marker='*')
+sns.lineplot(x=price_by_daysleft['days_left'],y=price_by_daysleft['price'])
+plt.show()
+
+     
+
+
+departure_time_counts = df['departure_time'].value_counts()
+
+plt.figure(figsize=(8, 8))
+plt.pie(departure_time_counts, labels=departure_time_counts.index, autopct='%1.1f%%', startangle=140, colors=sns.color_palette('viridis', len(departure_time_counts)))
+plt.title('Distribution of Departure Time')
+plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+plt.show()
+     
+
+
+df.columns
+     
+Index(['airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price'],
+      dtype='object')
+
+arrival_time_counts = df['arrival_time'].value_counts()
+
+plt.figure(figsize=(8, 8))
+plt.pie(arrival_time_counts, labels=arrival_time_counts.index, autopct='%1.1f%%', startangle=140, colors=sns.color_palette('plasma', len(arrival_time_counts)))
+plt.title('Distribution of Arrival time')
+plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+plt.show()
+     
+
+
+df.columns
+     
+Index(['airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price', 'route'],
+      dtype='object')
+
+df['airline'].unique()
+     
+array(['SpiceJet', 'AirAsia', 'Vistara', 'GO_FIRST', 'Indigo',
+       'Air_India'], dtype=object)
+
+price_by_daysleft_and_airline=df.groupby(['days_left','airline'])['price'].mean().reset_index()
+price_by_daysleft_and_airline_filtered=price_by_daysleft_and_airline[(price_by_daysleft_and_airline['days_left'].isin([1,2,3,4,5,10,15,20,25,30,35,40,45,49,50])
+                                                                                                                     & (price_by_daysleft_and_airline['airline'].isin(['AirAsia','Air_India','Indigo','Vistara','GO_FIRST','SpiceJet'])))]
+plt.figure(figsize=(18,10))
+plt.title('Change in Price vs Days Left (by Airline)')
+ax=sns.barplot(data=price_by_daysleft_and_airline_filtered,x='days_left',y='price',hue='airline', palette='viridis')
+     
+
+
+df['route'].unique()
+     
+array(['Delhi-Mumbai', 'Delhi-Bangalore', 'Delhi-Kolkata',
+       'Delhi-Hyderabad', 'Delhi-Chennai', 'Mumbai-Delhi',
+       'Mumbai-Bangalore', 'Mumbai-Kolkata', 'Mumbai-Hyderabad',
+       'Mumbai-Chennai', 'Bangalore-Delhi', 'Bangalore-Mumbai',
+       'Bangalore-Kolkata', 'Bangalore-Hyderabad', 'Bangalore-Chennai',
+       'Kolkata-Delhi', 'Kolkata-Mumbai', 'Kolkata-Bangalore',
+       'Kolkata-Hyderabad', 'Kolkata-Chennai', 'Hyderabad-Delhi',
+       'Hyderabad-Mumbai', 'Hyderabad-Bangalore', 'Hyderabad-Kolkata',
+       'Hyderabad-Chennai', 'Chennai-Delhi', 'Chennai-Mumbai',
+       'Chennai-Bangalore', 'Chennai-Kolkata', 'Chennai-Hyderabad'],
+      dtype=object)
+
+price_by_daysleft_and_class=df.groupby(['days_left','class'])['price'].mean().reset_index()
+price_by_daysleft_and_class=price_by_daysleft_and_class[price_by_daysleft_and_class['days_left'].isin([1,2,3,4,5,10,15,20,25,30,35,40,45,49])]
+plt.figure(figsize=(18,10))
+plt.title('Change in Price vs Days Left (by Class)')
+ax=sns.barplot(data=price_by_daysleft_and_class,x='days_left',y='price',hue='class',palette='Spectral')
+
+     
+
+
+route_counts = df['route'].value_counts()
+print("Count of flights for each route:")
+print(route_counts)
+     
+Count of flights for each route:
+route
+Delhi-Mumbai           15289
+Mumbai-Delhi           14809
+Delhi-Bangalore        14012
+Bangalore-Delhi        13756
+Bangalore-Mumbai       12939
+Mumbai-Bangalore       12885
+Mumbai-Kolkata         12602
+Delhi-Kolkata          11934
+Kolkata-Mumbai         11467
+Delhi-Chennai          10780
+Kolkata-Delhi          10506
+Mumbai-Hyderabad       10470
+Mumbai-Chennai         10130
+Hyderabad-Mumbai       10064
+Bangalore-Kolkata      10028
+Kolkata-Bangalore       9824
+Chennai-Delhi           9783
+Chennai-Mumbai          9338
+Delhi-Hyderabad         9328
+Bangalore-Hyderabad     8928
+Hyderabad-Delhi         8506
+Hyderabad-Kolkata       7987
+Kolkata-Hyderabad       7897
+Hyderabad-Bangalore     7854
+Chennai-Kolkata         6983
+Kolkata-Chennai         6653
+Chennai-Bangalore       6493
+Bangalore-Chennai       6410
+Hyderabad-Chennai       6395
+Chennai-Hyderabad       6103
+Name: count, dtype: int64
+
+display(route_counts.head(7))
+     
+count
+route	
+Delhi-Mumbai	15289
+Mumbai-Delhi	14809
+Delhi-Bangalore	14012
+Bangalore-Delhi	13756
+Bangalore-Mumbai	12939
+Mumbai-Bangalore	12885
+Mumbai-Kolkata	12602
+
+dtype: int64
+
+df.columns
+     
+Index(['airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price', 'route'],
+      dtype='object')
+
+df['source_city'].unique()
+     
+array(['Delhi', 'Mumbai', 'Bangalore', 'Kolkata', 'Hyderabad', 'Chennai'],
+      dtype=object)
+
+price_by_daysleft_and_route=df.groupby(['days_left','source_city'])['price'].mean().reset_index()
+price_by_daysleft_and_route=price_by_daysleft_and_route[price_by_daysleft_and_route['days_left'].isin([1,2,3,4,5,10,15,20,25,30,35,40,45,49])
+                                                                                                      & (price_by_daysleft_and_route['source_city'].isin(['Delhi','Mumbai','Bangalore','Kolkata','Hyderabad', 'Chennai' ]))]
+plt.figure(figsize=(18,10))
+plt.title('Change in Price vs Days Left (by Source City)')
+sns.barplot(data=price_by_daysleft_and_route,x='days_left',y='price',hue='source_city',palette='Reds')
+plt.show()
+
+     
+
+
+df.columns
+     
+Index(['index', 'airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price'],
+      dtype='object')
+
+df['stops'].unique()
+     
+array(['zero', 'one', 'two_or_more'], dtype=object)
+
+price_by_daysleft_and_stops=df.groupby(['days_left','stops'])['price'].mean().reset_index()
+price_by_daysleft_and_stops_filtered=price_by_daysleft_and_stops[(price_by_daysleft_and_stops['days_left'].isin([1,2,3,4,5,10,15,20,25,30,35,40,45,49,50])
+                                                                                                                     & (price_by_daysleft_and_stops['stops'].isin(['zero', 'one', 'two_or_more'])))]
+plt.figure(figsize=(18,10))
+plt.title('Change in Price vs Days Left (by Stops)')
+ax=sns.barplot(data=price_by_daysleft_and_stops_filtered,x='days_left',y='price',hue='stops', palette='Set1')
+     
+
+
+plt.figure(figsize=(10,5))
+plt.title('Distribution of Duration')
+sns.histplot(df[df['duration']<40]['duration'],kde=True,color='violet')
+     
+<Axes: title={'center': 'Distribution of Duration'}, xlabel='duration', ylabel='Count'>
+
+
+class_counts = df.groupby(['source_city', 'destination_city', 'class']).size().unstack(fill_value=0)
+
+class_counts.plot(kind='bar', figsize=(14,6), color=['green', 'brown'])
+
+plt.title("Flights by Route and Class")
+plt.xlabel("Route (Source → Destination)")
+plt.ylabel("Number of Flights")
+plt.xticks(rotation=90)
+plt.legend(title="Class")
+plt.show()
+     
+
+
+plt.figure(figsize=(8,5))
+sns.scatterplot(x='duration', y='price', data=df, alpha=0.5, hue='class')
+plt.title("Flight Duration vs Price")
+plt.xlabel("Duration (hours)")
+plt.ylabel("Price")
+plt.show()
+     
+
+
+plt.figure(figsize=(8,5))
+sns.scatterplot(x='duration', y='price', data=df, alpha=0.5, hue='airline')
+plt.title("Flight Duration vs Price")
+plt.xlabel("Duration (hours)")
+plt.ylabel("Price")
+plt.show()
+     
+
+
+df.columns
+     
+Index(['index', 'airline', 'flight', 'source_city', 'departure_time', 'stops',
+       'arrival_time', 'destination_city', 'class', 'duration', 'days_left',
+       'price'],
+      dtype='object')
+
+plt.figure(figsize=(8,5))
+sns.scatterplot(x='duration', y='price', data=df, alpha=0.5, hue='source_city', palette='Reds')
+plt.title("Flight Duration vs Price")
+plt.xlabel("Duration (hours)")
+plt.ylabel("Price")
+plt.show()
+     
+
+
+plt.figure(figsize=(8,5))
+sns.scatterplot(x='duration', y='price', data=df, alpha=0.5, hue='destination_city', palette='Blues')
+plt.title("Flight Duration vs Price")
+plt.xlabel("Duration (hours)")
+plt.ylabel("Price")
+plt.show()
+     
+
+
+route_price = df.groupby(['source_city', 'destination_city'])['price'].mean().sort_values(ascending=False)
+
+plt.figure(figsize=(12,6))
+route_price[:10].plot(kind='bar', color='pink', label='Top 10 Expensive')
+plt.title("Top 10 Expensive Routes by Average Price")
+plt.xlabel("Route")
+plt.ylabel("Average Price")
+plt.xticks(rotation=75)
+plt.legend()
+plt.show()
+
+
+     
+
+
+plt.figure(figsize=(12,6))
+route_price[-10:].plot(kind='bar', color='orange', label='Top 10 Cheapest')
+plt.title("Top 10 Cheapest Routes by Average Price")
+plt.xlabel("Route")
+plt.ylabel("Average Price")
+plt.xticks(rotation=75)
+plt.legend()
+plt.show()
+     
+
+
+time_price = df.groupby(['departure_time', 'arrival_time'])['price'].mean()
+
+plt.figure(figsize=(10,6))
+sns.heatmap(time_price, annot=True, fmt=".0f", cmap="coolwarm")
+plt.title("Average Price by Departure and Arrival Time")
+plt.xlabel("Arrival Time")
+plt.ylabel("Departure Time")
+plt.show()
+     
+
+
+df.drop(columns=['route','flight'],axis=1,inplace=True)
+     
+
+from sklearn.preprocessing import OneHotEncoder
+categorical_columns = df.select_dtypes(include=['object']).columns.tolist()
+data_modified=pd.get_dummies(df,columns=categorical_columns).replace(True,1.0).replace(False,0.0)
+     
+
+data_modified.head()
+     
+duration	days_left	price	airline_AirAsia	airline_Air_India	airline_GO_FIRST	airline_Indigo	airline_SpiceJet	airline_Vistara	source_city_Bangalore	...	arrival_time_Morning	arrival_time_Night	destination_city_Bangalore	destination_city_Chennai	destination_city_Delhi	destination_city_Hyderabad	destination_city_Kolkata	destination_city_Mumbai	class_Business	class_Economy
+0	2.17	1	5953	0.0	0.0	0.0	0.0	1.0	0.0	0.0	...	0.0	1.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0
+1	2.33	1	5953	0.0	0.0	0.0	0.0	1.0	0.0	0.0	...	1.0	0.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0
+2	2.17	1	5956	1.0	0.0	0.0	0.0	0.0	0.0	0.0	...	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0
+3	2.25	1	5955	0.0	0.0	0.0	0.0	0.0	1.0	0.0	...	0.0	0.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0
+4	2.33	1	5955	0.0	0.0	0.0	0.0	0.0	1.0	0.0	...	1.0	0.0	0.0	0.0	0.0	0.0	0.0	1.0	0.0	1.0
+5 rows × 38 columns
+
+
+df.columns
+     
+Index(['airline', 'source_city', 'departure_time', 'stops', 'arrival_time',
+       'destination_city', 'class', 'duration', 'days_left', 'price'],
+      dtype='object')
+
+numerical_cols = ['price', 'days_left', 'duration', ]
+correlation_matrix = df[numerical_cols].corr()
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='PuOr', fmt=".2f")
+plt.title('Correlation Heatmap of Price, Days Left, and Duration')
+plt.show()
+     
+
+
+from scipy import stats
+
+# Assuming you have your data in different groups (e.g., lists or arrays)
+# Replace these with your actual data for each group
+group1_data = [20, 22, 24, 23, 25]
+group2_data = [18, 19, 21, 20, 22]
+group3_data = [25, 26, 28, 27, 29]
+
+# Perform one-way ANOVA test
+f_statistic, p_value = stats.f_oneway(group1_data, group2_data, group3_data)
+
+print(f"F-statistic: {f_statistic}")
+print(f"P-value: {p_value}")
+
+# Interpret the results
+alpha = 0.05  # Significance level
+if p_value < alpha:
+    print("Reject the null hypothesis: There is a significant difference in the means of the groups.")
+else:
+    print("Fail to reject the null hypothesis: There is no significant difference in the means of the groups.")
+     
+F-statistic: 21.402298850574724
+P-value: 0.00011020099394565161
+Reject the null hypothesis: There is a significant difference in the means of the groups.
+
+# Assuming you have generated a plot before this cell
+plt.savefig('my_plot.png')
+# You can specify different formats like 'jpg', 'pdf', etc.
+# plt.savefig('my_plot.jpg')
+# plt.savefig('my_plot.pdf')
+     
+
+# Calculate average metrics for each airline
+airline_metrics = df.groupby('airline')[['price', 'duration', 'days_left']].mean().reset_index()
+display(airline_metrics)
+     
+airline	price	duration	days_left
+0	AirAsia	4091.072742	8.941714	27.735184
+1	Air_India	23507.019112	15.504235	25.497466
+2	GO_FIRST	5652.007595	8.755380	27.430415
+3	Indigo	5324.216303	5.795197	26.264309
+4	SpiceJet	6179.278881	12.579767	24.122850
+5	Vistara	30396.536302	13.326634	25.894532
+
+# Import necessary libraries for radar chart
+import plotly.express as px
+
+# Create radar chart
+fig = px.line_polar(airline_metrics, r='price', theta='airline', line_close=True,
+                    title='Average Price by Airline',
+                    hover_data={'price':':.2f', 'duration':':.2f', 'days_left':':.2f'})
+fig.update_traces(fill='toself')
+fig.show()
+
+fig = px.line_polar(airline_metrics, r='duration', theta='airline', line_close=True,
+                    title='Average Duration by Airline',
+                    hover_data={'price':':.2f', 'duration':':.2f', 'days_left':':.2f'})
+fig.update_traces(fill='toself')
+fig.show()
+
+fig = px.line_polar(airline_metrics, r='days_left', theta='airline', line_close=True,
+                    title='Average Days Left by Airline',
+                    hover_data={'price':':.2f', 'duration':':.2f', 'days_left':':.2f'})
+fig.update_traces(fill='toself')
+fig.show()
+     
+Seaborn provides a wide range of color palettes. Some commonly used ones include:
+
+Sequential Palettes:
+
+Blues, Greens, Reds, Purples, Oranges (single hue)
+viridis, plasma, inferno, magma, cividis (perceptually uniform)
+Diverging Palettes:
+
+coolwarm, bwr, seismic, RdBu, PuOr
+Qualitative Palettes:
+
+tab10, tab20, Set1, Set2, Set3, Paired
+You can also create custom palettes or use matplotlib colormaps.
